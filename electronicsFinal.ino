@@ -1,8 +1,5 @@
 //final project
 
-//add
-//button for calibration
-//multiple base readings
 //double width of light and fix off-center problem?
 
 const int pins[] = {13, 12, 11, 10, 9, 8, 7, 6, 5, 4};
@@ -23,8 +20,7 @@ void setup() {
 }
 
 void loop() {
-  bool c = !digitalRead(3);
-  if (c){
+  if (!digitalRead(3)){  //if button pressed
     calibrate();
   }
   moveLight();
@@ -54,7 +50,7 @@ void calibrate(){  //calibration and light pattern
   Serial.print(", ");
   Serial.println(base1);
 
-  digitalWrite(2, HIGH);
+  digitalWrite(2, HIGH);  //blink LED twice
   delay(100);
   digitalWrite(2, LOW);
   delay(100);
@@ -66,17 +62,6 @@ void calibrate(){  //calibration and light pattern
 void moveLight(){
   int cur0 = analogRead(in0);
   int cur1 = analogRead(in1);
-  /*
-  if (withinRange(base0, cur0, 30) && withinRange(base1, cur1, 30)){
-    light(curLight);
-  }else if ((base0 - cur0) > (base1 - cur1)){
-    //base 0
-    light(curLight + 2);
-  }else{
-    //base 1
-    light(curLight - 2);
-  }
-  */
   if (withinRange(cur0, cur1, 10)){
     light(curLight);
   }
