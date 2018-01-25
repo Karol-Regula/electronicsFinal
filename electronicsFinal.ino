@@ -1,6 +1,5 @@
+//Karol Regula
 //final project
-
-//double width of light and fix off-center problem?
 
 const int pins[] = {13, 12, 11, 10, 9, 8, 7, 6, 5, 4};
 const int in0 = 0;
@@ -62,42 +61,81 @@ void calibrate(){  //calibration and light pattern
 void moveLight(){
   int cur0 = analogRead(in0);
   int cur1 = analogRead(in1);
-  if (withinRange(cur0, cur1, 10)){
-    light(curLight);
+  int rangeSize = 0;
+
+  if (rangeSize == 0){ //standard range
+    if (withinRange(cur0, cur1, 10)){
+      light(curLight);
+    }
+    if (cur0 < cur1){
+      //left
+      if (withinRange(cur0, cur1, 20) && !withinRange(cur0, cur1, 10)){
+        light(curLight + 1);
+      }
+      if (withinRange(cur0, cur1, 35) && !withinRange(cur0, cur1, 20)){
+        light(curLight + 2);
+      }
+      if (withinRange(cur0, cur1, 50) && !withinRange(cur0, cur1, 35)){
+        light(curLight + 3);
+      }
+      if (withinRange(cur0, cur1, 65) && !withinRange(cur0, cur1, 50)){
+        light(curLight + 4);
+      }
+      if (withinRange(cur0, cur1, 1000) && !withinRange(cur0, cur1, 65)){
+        light(curLight + 5);
+      }
+    }else{
+      //right
+      if (withinRange(cur0, cur1, 20) && !withinRange(cur0, cur1, 10)){
+        light(curLight - 1);
+      }
+      if (withinRange(cur0, cur1, 40) && !withinRange(cur0, cur1, 20)){
+        light(curLight - 2);
+      }
+      if (withinRange(cur0, cur1, 60) && !withinRange(cur0, cur1, 40)){
+        light(curLight - 3);
+      }
+      if (withinRange(cur0, cur1, 1000) && !withinRange(cur0, cur1, 60)){
+        light(curLight - 4);
+      }
+    }
+  }else{ //smaller range, for lower light levels
+    if (withinRange(cur0, cur1, 8)){
+      light(curLight);
+    }
+    if (cur0 < cur1){
+      //left
+      if (withinRange(cur0, cur1, 17) && !withinRange(cur0, cur1, 8)){
+        light(curLight + 1);
+      }
+      if (withinRange(cur0, cur1, 26) && !withinRange(cur0, cur1, 17)){
+        light(curLight + 2);
+      }
+      if (withinRange(cur0, cur1, 36) && !withinRange(cur0, cur1, 26)){
+        light(curLight + 3);
+      }
+      if (withinRange(cur0, cur1, 48) && !withinRange(cur0, cur1, 36)){
+        light(curLight + 4);
+      }
+      if (withinRange(cur0, cur1, 1000) && !withinRange(cur0, cur1, 48)){
+        light(curLight + 5);
+      }
+    }else{
+      //right
+      if (withinRange(cur0, cur1, 17) && !withinRange(cur0, cur1, 8)){
+        light(curLight - 1);
+      }
+      if (withinRange(cur0, cur1, 30) && !withinRange(cur0, cur1, 17)){
+        light(curLight - 2);
+      }
+      if (withinRange(cur0, cur1, 45) && !withinRange(cur0, cur1, 30)){
+        light(curLight - 3);
+      }
+      if (withinRange(cur0, cur1, 1000) && !withinRange(cur0, cur1, 45)){
+        light(curLight - 4);
+      }
+    }
   }
-  if (cur0 < cur1){
-    //left
-    if (withinRange(cur0, cur1, 20) && !withinRange(cur0, cur1, 10)){
-      light(curLight + 1);
-    }
-    if (withinRange(cur0, cur1, 35) && !withinRange(cur0, cur1, 20)){
-      light(curLight + 2);
-    }
-    if (withinRange(cur0, cur1, 50) && !withinRange(cur0, cur1, 35)){
-      light(curLight + 3);
-    }
-    if (withinRange(cur0, cur1, 65) && !withinRange(cur0, cur1, 50)){
-      light(curLight + 4);
-    }
-    if (withinRange(cur0, cur1, 1000) && !withinRange(cur0, cur1, 65)){
-      light(curLight + 5);
-    }
-  }else{
-    //right
-    if (withinRange(cur0, cur1, 20) && !withinRange(cur0, cur1, 10)){
-      light(curLight - 1);
-    }
-    if (withinRange(cur0, cur1, 40) && !withinRange(cur0, cur1, 20)){
-      light(curLight - 2);
-    }
-    if (withinRange(cur0, cur1, 60) && !withinRange(cur0, cur1, 40)){
-      light(curLight - 3);
-    }
-    if (withinRange(cur0, cur1, 1000) && !withinRange(cur0, cur1, 60)){
-      light(curLight - 4);
-    }
-  }
-  
 }
 
 void light(int pinNumber){ //lights pin with pinNumber for set amount of time
@@ -107,10 +145,11 @@ void light(int pinNumber){ //lights pin with pinNumber for set amount of time
 }
 
 void printStatus() {  //debug
+  Serial.print("BASE: ");
   Serial.print(base0);
   Serial.print(", ");
   Serial.print(base1);
-  Serial.print("  ||  ");
+  Serial.print("  ||  VALUES: ");
   Serial.print(analogRead(in0));
   Serial.print(", ");
   Serial.println(analogRead(in1));
